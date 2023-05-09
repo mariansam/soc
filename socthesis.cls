@@ -77,19 +77,14 @@
   [Neznámé číslo oboru, upravte \\field{} příkaz!]
 }
 
-\titleen{}
-\region{Středočeský}
-\placefooter{Mělník \the\year}
-\mentorstatement{\@mentor}
-
 %%% Titulní strany
 \renewcommand{\maketitle}{%
 	\pagestyle{empty}
-	\voffset = -20mm % posun začátku textu výš
-    \enlargethispage{40mm} % zvětší oblast tisku pro tuto stránku
+	% \voffset = -20mm % posun začátku textu výš
+	% \enlargethispage{40mm} % zvětší oblast tisku pro tuto stránku
 	\begin{center}
-	    {\large \B{STŘEDOŠKOLSKÁ ODBORNÁ ČINNOST}} \\
-	    \vspace{5mm}
+		{\large\B{STŘEDOŠKOLSKÁ ODBORNÁ ČINNOST}} \\
+		\vspace{5mm}
 		\normalsize \B{Obor: \@field} \\
 
 		\vspace{40mm}
@@ -98,7 +93,7 @@
 
 		\vfill
 
-        	{\Large \B{\@author}} \\
+		{\Large \B{\@author}} \\
 
 		\vspace{20mm}
 
@@ -107,9 +102,9 @@
 	\newpage
 
 	\pagestyle{empty}
-    \enlargethispage{40mm} % zvětší oblast tisku pro tuto stránku
+	% \enlargethispage{40mm} % zvětší oblast tisku pro tuto stránku
 	\begin{center}
-	    {\large \B{STŘEDOŠKOLSKÁ ODBORNÁ ČINNOST}} \\
+		{\large \B{STŘEDOŠKOLSKÁ ODBORNÁ ČINNOST}} \\
 
 		\vspace{40mm}
 
@@ -119,19 +114,19 @@
 
 		\vfill
 
-        \begin{table}[h]
-        \setlength{\tabcolsep}{12pt}
-        \renewcommand{\arraystretch}{1.5}
-        \linespread{1.0}
-		\begin{tabularx}{\textwidth}{r >{\raggedright}p{90mm} c}
-		\large \B{AUTOR} & \large \B{\@author} & \\
-		\large \B{ŠKOLA} & \large \B{\@school} & \\
-		\large \B{KRAJ} & \large \B{\@region} & \\
-		\large \B{ŠKOLITEL} & \large \B{\@mentor} & \\
-		\large \B{OBOR} & \large \B{\@field} & \\
-		\end{tabularx}
-		\setlength{\tabcolsep}{6pt}
-        \renewcommand{\arraystretch}{1.0}
+		\begin{table}[h]
+			\setlength{\tabcolsep}{12pt}
+			\renewcommand{\arraystretch}{1.5}
+			\linespread{1.0}
+			\begin{tabularx}{\textwidth}{r >{\raggedright}p{90mm} c}
+				\large \B{AUTOR} & \large \B{\@author} & \\
+				\large \B{ŠKOLA} & \large \B{\@school} & \\
+				\large \B{KRAJ} & \large \B{\@region} & \\
+				\large \B{ŠKOLITEL} & \large \B{\@mentor} & \\
+				\large \B{OBOR} & \large \B{\@field} & \\
+			\end{tabularx}
+			\setlength{\tabcolsep}{6pt}
+			\renewcommand{\arraystretch}{1.0}
 		\end{table}
 
 		\vspace{10mm}
@@ -192,7 +187,3 @@
 	\newpage
 	\pagestyle{plain}
 }
-
-
-
-
