@@ -1,5 +1,29 @@
 \chapter{Analýza a pravidla hry}
 
 \section{Pravidla}
+Pravidla hry TickoaTTwo jako první určil \textcite{jenkins22}.
 
-Hra TickoaTTwo se hraje na idk man
+Stejně jako tradiční piškvorky, hra TickoaTTwo se hraje na hrací ploše o velikosti 3x3. Hrací plocha má dle původní definice hry specifický vzhled.
+
+% TODO obrázek hrací plochy
+
+% TODO je určen první hráč?
+
+Stejně jako tradiční piškvorky, hru TickoaTTwo proti sobě hrají dva hráči,
+kteří se střídají v tazích. Jeden hráč na políčka v hrací ploše kreslí svislé
+čáry, druhý hráč vodorovné čáry. Na každé políčko může daný hráč hrát pouze
+jednou, avšak lze hrát na políčko, na které už hrál protihráč. Nelze však hrát
+na políčko, na které hrál protihráč v jeho posledním tahu.
+
+Není dáno, který hráč začíná.
+
+Cílem každého hráče je dokončit řadu, sloupec či diagonálu, do které už hráli
+oba dva hráči. Hra tedy končí ve stavu, kdy na hrací ploše je alespoň jedna
+řada, sloupec či diagonála, ve které jsou tři \enquote{téčka} (svislá čára od
+jednoho hráče, vodorovná čára od druhého hráče), podle toho i stylizovaný název
+hry se třemi velkými písmeny T.
+
+
+% počet her: na každém políčku čtyři, to však děleno 4 protože 4 rotace
+% nejkratší hra 6 tahů vyhrává druhý, u klasických 5 tahů vyhrává první
+% nejrychlejší hra 15 (? pět T, 4 samostatné, patnáctý ukončí), u klasických 9
