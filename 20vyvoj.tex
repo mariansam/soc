@@ -16,4 +16,53 @@ Součástí T3 Stack je nástroj \M{create-t3-app}, který umožňuje vytvořit 
 Seznam technologií použitých:
 \begin{itemize}
     \item \B{TypeScript:} Nadstavba nad programovacím jazykem JavaScript, která přidává typové anotace a jejich kontrolu. Tím umožňuje rychlejší a bezpečnější vývoj.
+    \item \B{Next.js:} Moderní framework pro vytváření serverových částí webových  aplikací, slouží jako back-end pro React.
+    \item \B{React:} Framework pro vytváření front-endových částí webových aplikací.
+    \item \B{tRPC:} Knihovna pro bezpečnou a otypovanou komunikaci mezi front-endem (React) a back-endem (Next.js).
+    \item \B{Prisma:} Knihovna pro komunikaci mezi back-endem (Next.js) a databází.
+    \item \B{TailwindCSS:} Knihovna pro rychlé stylování webových aplikací.
 \end{itemize}
+
+Častou součástí této sady technologií též bývá NextAuth.js, které řeší přihlašování, registraci a správu uživatelů. Jelikož naše aplikace registraci uživatelů neumožňuje, není taková knihovna potřeba.
+
+\section{Databáze}
+
+Jako databáze k aplikaci byla zvolena PostgreSQL, jelikož se v dnešní době
+jedná o jednu z nejpoužívanějších a nejoblíbenějších databází \cite{stackoverflow23}.
+
+Schéma databáze je pouze jedna tabulka \M{GameSession} reprezentující jednu hru
+mezi dvěma hráči. Vedle ní také enum \M{GridFieldState} reprezentující stav
+jednoho hracího políčka (je prázdné, hrál na něj pouze první hráč, hrál na něj
+pouze druhý hráč, hráli na něj oba hráči) a enum \M{GameState} reprezentující
+stav hry (čeká se na druhého hráče, první hráč je na řadě, druhý hráč je na
+řadě, první hráč vyhrál, druhý hráč vyhrál).
+
+\begin{lstlisting}[language=Prisma]
+enum GridFieldState {
+    empty
+    player1in
+    player2in
+    both
+}
+
+enum GameState {
+    inviting
+    player1plays
+    player2plays
+    player1won
+    player2won
+}
+
+model GameSession {
+    id          String      @id @default(cuid())
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    slug        String      @unique
+    player1     String?
+    player2     String?
+    visible     Boolean
+    state       GameState   @default(inviting)
+    lastPos     Int         @default(-1)
+    grid        GridFieldState[]    @default([empty, empty, empty, empty, empty, empty, empty, empty, empty])
+}
+\end{lstlisting}

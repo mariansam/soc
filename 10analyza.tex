@@ -4,11 +4,15 @@
 Pravidla hry TickoaTTwo jako první určil \textcite{jenkins22}.
 
 Stejně jako tradiční piškvorky, hra TickoaTTwo se hraje na hrací ploše o
-velikosti 3x3. Hrací plocha má dle původní definice hry specifický vzhled.
+velikosti 3x3. Hrací plocha má dle původní definice hry specifický vzhled jako
+na obrázku \ref{fig:empty-board}.
 
-% TODO obrázek hrací plochy
-
-% TODO je určen první hráč?
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=300px]{img/empty-board.png}
+    \caption{Prázdná herní plocha}
+    \label{fig:empty-board}
+\end{figure}
 
 Stejně jako tradiční piškvorky, hru TickoaTTwo proti sobě hrají dva hráči,
 kteří se střídají v tazích. Jeden hráč na políčka v hrací ploše kreslí svislé
@@ -31,7 +35,7 @@ hry se třemi velkými písmeny T.
 
 \section{Optimální strategie}
 Zatímco klasické 3x3 piškvorky vždy končí remízou pokud hrají oba dva hráči optimálně
-ZDROJ, tak u TickoaTTwo nelze končit remízou. Budou-li oba hráči hrát
+\cite{crowley1993}, tak u TickoaTTwo nelze končit remízou. Budou-li oba hráči hrát
 optimálně, vyhrává druhý hráč. Základním pravidlem je nevytvořit tři vlastní
 znaky v jedné vertikále/horizontále/diagonále, protože tím bychom dali
 protihráči možnost je jednoduše doplnit a vyhrát. Nejhorší herní políčko je

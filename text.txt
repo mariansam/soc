@@ -1,0 +1,93 @@
+Úvod
+V říjnu 2022 vydal americký youtuber Oats Jenkins video I Made BETTER TicTac-Toe (Udělal jsem lepší piškvorky) [1]. V něm popisuje „americké“ 3x3 piškvorky
+a jejich problémy. Následně přichází s upravenou verzí hry, ve které jsou dané problémy vyřešeny. Alternativa se jmenuje TickoaTTwo. Tato práce popisuje výhody a
+nevýhody nové hry, analyzuje ji z pohledu teorie her.
+
+9
+
+1 Analýza a pravidla hry
+1.1
+
+Pravidla
+
+Pravidla hry TickoaTTwo jako první určil Jenkins [1].
+Stejně jako tradiční piškvorky, hra TickoaTTwo se hraje na hrací ploše o velikosti
+3x3. Hrací plocha má dle původní definice hry specifický vzhled jako na obrázku 1.1.
+
+Obrázek 1.1: Prázdná herní plocha
+Stejně jako tradiční piškvorky, hru TickoaTTwo proti sobě hrají dva hráči, kteří se
+střídají v tazích. Jeden hráč na políčka v hrací ploše kreslí svislé čáry, druhý hráč
+vodorovné čáry. Na každé políčko může daný hráč hrát pouze jednou, avšak lze hrát
+na políčko, na které už hrál protihráč. Nelze však hrát na políčko, na které hrál
+protihráč v jeho posledním tahu.
+Není dáno, který hráč začíná.
+Cílem každého hráče je dokončit řadu, sloupec či diagonálu, do které už hráli oba
+dva hráči. Hra tedy končí ve stavu, kdy na hrací ploše je alespoň jedna řada, sloupec
+či diagonála, ve které jsou tři „téčka“ (svislá čára od jednoho hráče, vodorovná čára
+10
+
+od druhého hráče), podle toho i stylizovaný název hry se třemi velkými písmeny T.
+
+1.2
+
+Optimální strategie
+
+Zatímco klasické 3x3 piškvorky vždy končí remízou pokud hrají oba dva hráči optimálně [2], tak u TickoaTTwo nelze končit remízou. Budou-li oba hráči hrát optimálně, vyhrává druhý hráč. Základním pravidlem je nevytvořit tři vlastní znaky v
+jedné vertikále/horizontále/diagonále, protože tím bychom dali protihráči možnost
+je jednoduše doplnit a vyhrát. Nejhorší herní políčko je tedy to prostřední, protože se
+v něm protínají hned čtyři vertikály/horizontály/diagonály (na rozdíl od klasických
+piškvorek, kde prostřední políčko je nejvíce žádané ZDROJ BLBOST ASI)
+Optimální strategie pro druhého hráče je co nejdéle hrát naproti prvnímu hráči.
+Jelikož první hráč nechce zabrat tři sousední políčka nebo hrát doprostřed, hra
+se dostane do stavu, kde je šest políček plně zaplněno, uprostřed je jedna volná
+diagonála a na tahu je první hráč, viz obrázek 1.2
+
+Obrázek 1.2: Hra po devíti tazích optimální strategie
+Ať zahraje první hráč kamkoli, druhý hráč bude hrát na další volné políčko v diagonále. První hráč následně zabere třetí volné políčko (jedno už zabral on, na druhé
+hrát nemůže, protože ho zabral protihráč v právě předchozím tahu). Druhému hráč
+už tak pouze zbývá jedno jediné políčko, na které může hrát, které ho dovede k
+11
+
+vítězství, viz obrázek 1.3.
+
+Obrázek 1.3: Možný průběh optimální hry pro poslední diagonálu, tahy očíslované
+
+12
+
+2 Vývoj implementace
+2.1
+
+Použité technologie
+
+Webová online multiplayer hra je implementovaná pomocí technologií, kterým se
+souhrnně říká T3 Stack. Podle oficiální dokumentace [3] úkolem technologií T3 Stack
+je
+1. Řešit problémy: Neposkytovat všechny technologie, které jsou dostupné, ale
+poskytnout technologie, které jsou základem většiny webových aplikací a může
+být složité je nastavit manuálně.
+2. „Krvácet“ zodpovědně: Poskytovat technologie, které jsou moderní a atraktivní, ale tak, aby v budoucnu netvořily problémy a případně se daly nahradit.
+3. Typová bezpečnost není dobrovolná: Znalost datových typů pomáhá programátorům s vývojem a bezpečným kódem, proto je v moderním vývoji naprosto nezbytná.
+Součástí T3 Stack je nástroj create-t3-app, který umožňuje vytvořit nový projekt,
+ve kterém jsou dané technologie předem nastavené.
+Seznam technologií použitých:
+• TypeScript: Nadstavba nad programovacím jazykem JavaScript, která přidává typové anotace a jejich kontrolu. Tím umožňuje rychlejší a bezpečnější
+vývoj.
+• Next.js: Moderní framework pro vytváření serverových částí webových aplikací, slouží jako back-end pro React.
+• React: Framework pro vytváření front-endových částí webových aplikací.
+• tRPC: Knihovna pro bezpečnou a otypovanou komunikaci mezi front-endem
+(React) a back-endem (Next.js).
+• Prisma: Knihovna pro komunikaci mezi back-endem (Next.js) a databází.
+• TailwindCSS: Knihovna pro rychlé stylování webových aplikací.
+Častou součástí této sady technologií též bývá NextAuth.js, které řeší přihlašování,
+registraci a správu uživatelů. Jelikož naše aplikace registraci uživatelů neumožňuje,
+není taková knihovna potřeba.
+13
+
+2.2
+
+Databáze
+
+Jako databáze k aplikaci byla zvolena PostgreSQL, jelikož se v dnešní době jedná o
+jednu z nejpoužívanějších a nejoblíbenějších databází [4].
+
+14
