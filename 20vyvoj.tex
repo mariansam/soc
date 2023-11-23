@@ -37,7 +37,7 @@ pouze druhý hráč, hráli na něj oba hráči) a enum \M{GameState} reprezentu
 stav hry (čeká se na druhého hráče, první hráč je na řadě, druhý hráč je na
 řadě, první hráč vyhrál, druhý hráč vyhrál).
 
-\begin{lstlisting}[language=Prisma]
+\begin{lstlisting}[language=Prisma,caption={Schéma databáze},label={fig:db-schema}]
 enum GridFieldState {
     empty
     player1in
@@ -66,3 +66,64 @@ model GameSession {
     grid        GridFieldState[]    @default([empty, empty, empty, empty, empty, empty, empty, empty, empty])
 }
 \end{lstlisting}
+
+\section{Komunikace se serverem}
+
+Komunikace mezi klientem (prohlížečem) a serverem je řešena pomocí tRPC a
+WebSocketů. WebSocket umožňuje oboustrannou komunikaci mezi klientem a serverem
+bez nutnosti pravidelného dotazování se serveru na změny \cite{mdn-ws}. tRPC
+zajišťuje validaci a čtení dat (společně s knihovnou zod, v kódu zkracováno na
+\M{z}) a poskytuje lepší vývojářský prožitek (developer experience) sdílením a
+odvozováním typových anotací. Tedy když programátor na back-endu napíše funkci,
+která bere jedno číslo a jeden text (string), i v kódu na front-endu mu
+našeptávání v editoru bude doporučovat číslo a text a ukáže chybu, pokud by
+programátor napsal argumenty k funkci špatně. Tím se odlišuje od tradičních
+komunikačních technologiích jako je REST, u kterých je běžné předat vzdálené
+funkci špatné argumenty, obzvláště pokud daný kód píše více vývojářů.
+
+Příklad efektivního využití tRPC je vidět na back-endové funkci, která se stará
+o zahrání tahu hráčem. Funkce přijímá tři argumenty: \M{slug} (specifický
+string označující hru, kterou hráč hraje), \M{playerId} (specifický string
+označující hráče), \M{buttonIndex} (číslo 0--8 označující herní políčko, do
+kterého chce hráč zahrát). Všechny argumenty jsou automaticky přeloženy do
+jejich správných datových typů, aby se s nimi dalo nadále pracovat. Pokud by
+přišla nevalidní data (ať už chybou na front-endu nebo například od útočníka),
+automaticky se vrátí error.
+
+\begin{lstlisting}[language=JavaScript,caption={Funkce pro zahrání tahu},label={fig:be-make-move}]
+makeMove: publicProcedure
+    .input(z.object({
+        slug: zodSlug(),
+        playerId: z.string(),
+        buttonIndex: z.number().min(0).max(8),
+    }))
+    .mutation(async ({ input: { slug, playerId, buttonIndex } }) => {
+        console.log(`hrac ${playerId} ve hre ${slug} hraje na policko ${buttonIndex}`);
+        // zbytek kodu pro zahrani tahu
+\end{lstlisting}
+
+Daná funkce se volá na front-endu po kliknutí na herní políčko se správnými
+argumenty. Kdyby byl nějaký argument vynechán, byl předáván jako špatný datový
+typ nebo nějaký přebýval, vyhodil by se error.
+
+\begin{lstlisting}[language=JavaScript,caption={Volání funkce pro zahrání tahu},label={fig:fe-make-move}]
+await makeMoveMutation.mutateAsync({
+    slug,
+    playerId,
+    buttonIndex,
+});
+\end{lstlisting}
+
+args
+bagr
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=300px]{img/diagrams/create-new-game.pdf}
+    \caption{XYz}
+    \label{fig:create-new-game}
+\end{figure}
+
+penis
+
+penis
