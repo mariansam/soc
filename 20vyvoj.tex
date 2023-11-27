@@ -37,6 +37,12 @@ pouze druhý hráč, hráli na něj oba hráči) a enum \M{GameState} reprezentu
 stav hry (čeká se na druhého hráče, první hráč je na řadě, druhý hráč je na
 řadě, první hráč vyhrál, druhý hráč vyhrál).
 
+
+Každá \M{GameSession} má identifikátor \M{id}, který je pouze pro interní
+použití, uživatelům se však zveřejňuje identifikátor \M{slug} (v doslovném
+překladu slimák, v informačních technologiích termín používaný pro uživatelsky
+čitelný identifikátor), který se používá i v URL adrese.\label{par:game-id}
+
 \begin{lstlisting}[language=Prisma,caption={Schéma databáze},label={fig:db-schema}]
 enum GridFieldState {
     empty
@@ -114,8 +120,17 @@ await makeMoveMutation.mutateAsync({
 });
 \end{lstlisting}
 
-args
-bagr
+Samotné schéma komunikace v implementaci TickoaTTwo je rozdělené na několik
+částí. Některé jsou rozdílné pro prvního hráče (který hru vytváří a následně se
+do ní připojuje) a pro druhého hráče (který se do hry pouze připojuje).
+
+V případě prvního hráče musí uživatel kliknout na tlačítko \It{CREATE GAME}
+(vytvořit hru), kód na server pošle příkaz \M{createNewGame} (vytvořit novou
+hru) bez jakýchkoli argumentů, server vygeneruje slug a vytvoří novou hru s
+danou hodnotou \M{slug}, zbylé hodnoty se ponechají výchozí podle schématu
+\ref{fig:db-schema}. Informace o nově vytvořené hře jsou vráceny na klienta a
+kód přesměruje prohlížeč na URL \M{/\{newGame.slug\}} (kde \M{\{newGame.slug\}}
+je slug nově vytvořené hry, viz \ref{par:game-id}).
 
 \begin{figure}[h]
     \centering
@@ -124,6 +139,28 @@ bagr
     \label{fig:create-new-game}
 \end{figure}
 
-penis
+Oba hráči se do hry připojují stejným způsobem, nějak se dostanou na adresu
+\M{/\{slug\}}. Jak je popsáno v kapitole TODO. V tu chvíli kód pošle na server
+příkaz \M{connectPlayer} (připojit hráče) s argumentem \M{slug}, server zjistí,
+zda hra s daným slugem existuje a zda je v ní alespoň jedno volné místo, a
+pokud ano, vygeneruje pro hráče unikátní ID, které uloží do \M{player1} nebo
+\M{player2} podle toho, zda se do hry připojuje jako první nebo druhý hráč.
+Server zpět vrátí informaci o tom, zda hráč je \M{player1} nebo \M{player2} a
+jeho unikátní ID, to front-end následně používá pro autentifikaci.
 
-penis
+V případě připojení druhého hráče je ještě potřeba nastavit stav hry na
+\M{player1plays} a přes WebSocket poslat prvnímu hráči informaci o změně
+herních dat.
+
+Když oba hráči získají svoje ID, mohou si získat aktuální herní data a připojit
+se k odběru nových herních dat. K tomu slouží příkazy \M{getGameData} (získat
+herní data) a \M{newGameDataSubscription} (nový odběr herních dat). První herní
+data pouze jednorázově získá, druhý však přijímá zprávy poslané serverem a když
+se herní data změní, vždy přepíše data získaná prvním příkazem.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=300px]{img/diagrams/connect-game.pdf}
+    \caption{XYz}
+    \label{fig:connect-game}
+\end{figure}
