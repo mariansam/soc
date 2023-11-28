@@ -1,3 +1,140 @@
+STŘEDOŠKOLSKÁ ODBORNÁ ČINNOST
+Obor: 18. Informatika
+
+TickoaTTwo – implementace moderních
+piškvorek
+
+Marian Šámal
+
+Mělník 2023
+
+STŘEDOŠKOLSKÁ ODBORNÁ ČINNOST
+
+TICKOATTWO – IMPLEMENTACE
+MODERNÍCH PIŠKVOREK
+
+TICKOATTWO – IMPLEMENTATION OF MODERN
+TICK-TAC-TOE
+
+AUTOR
+
+Marian Šámal
+
+ŠKOLA
+
+Gymnázium Jana Palacha, Pod
+Vrchem 3421, Mělník 276 01
+
+KRAJ
+ŠKOLITEL
+OBOR
+
+Středočeský
+Mgr. Markéta Wolfová
+18. Informatika
+
+Mělník 2023
+
+Prohlášení
+Prohlašuji, že svou práci na téma TickoaTTwo – implementace moderních piškvorek
+jsem vypracoval/a samostatně pod vedením Mgr. Markéty Wolfové a s použitím
+odborné literatury a dalších informačních zdrojů, které jsou všechny citovány v práci
+a uvedeny v seznamu literatury na konci práce.
+Dále prohlašuji, že tištěná i elektronická verze práce SOČ jsou shodné a nemám
+závažný důvod proti zpřístupňování této práce v souladu se zákonem č. 121/2000 Sb.,
+o právu autorském, o právech souvisejících s právem autorským a změně některých
+zákonů (autorský zákon) v platném změní.
+
+Mělník dne:
+Marian Šámal
+
+Poděkování
+díky
+
+Anotace
+Práce popisuje implementaci hry TickoaTTwo popsané ve videu I Made BETTER
+Tic-Tac-Toe jako webové aplikace a analýzu této hry z pohledu teorie her.
+
+Klíčová slova
+piškvorky, TickoaTTwo, webová aplikace, T3 Stack
+
+Annotation
+This thesis describes the implementation of the game TickoaTTwo described in the
+video I Made BETTER Tic-Tac-Toe as a web application and analyzes it from the
+game theory point of view.
+
+Keywords
+tick-tac-toe, TickoaTTwo, web application, T3 Stack
+
+Obsah
+Úvod
+
+9
+
+1 Analýza a pravidla hry
+
+10
+
+1.1
+
+Pravidla . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+1.2
+
+Optimální strategie . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+2 Vývoj implementace
+
+13
+
+2.1
+
+Použité technologie . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+
+2.2
+
+Databáze
+
+2.3
+
+Komunikace se serverem . . . . . . . . . . . . . . . . . . . . . . . . . 15
+
+2.4
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+
+2.3.1
+
+Připojování do hry . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+2.3.2
+
+Hraní tahů . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+
+2.3.3
+
+Opakování hry
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+Implementace pravidel . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+2.4.1
+
+Validace tahu . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+2.4.2
+
+Změna hrací plochy . . . . . . . . . . . . . . . . . . . . . . . . 20
+
+2.4.3
+
+Zjišťování výhry . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+
+Závěr
+Literatura
+Seznam programů
+Seznam obrázků
+
 Úvod
 V říjnu 2022 vydal americký youtuber Oats Jenkins video I Made BETTER TicTac-Toe (Udělal jsem lepší piškvorky) [1]. V něm popisuje „americké“ 3x3 piškvorky
 a jejich problémy. Následně přichází s upravenou verzí hry, ve které jsou dané problémy vyřešeny. Alternativa se jmenuje TickoaTTwo. Tato práce popisuje výhody a
@@ -23,10 +160,11 @@ protihráč v jeho posledním tahu.
 Není dáno, který hráč začíná.
 Cílem každého hráče je dokončit řadu, sloupec či diagonálu, do které už hráli oba
 dva hráči. Hra tedy končí ve stavu, kdy na hrací ploše je alespoň jedna řada, sloupec
-či diagonála, ve které jsou tři „téčka“ (svislá čára od jednoho hráče, vodorovná čára
+
 10
 
-od druhého hráče), podle toho i stylizovaný název hry se třemi velkými písmeny T.
+či diagonála, ve které jsou tři „téčka“ (svislá čára od jednoho hráče, vodorovná čára
+od druhého hráče), podle toho i stylizovaný název hry se třemi velkými písmeny T.
 
 1.2
 
@@ -45,10 +183,10 @@ diagonála a na tahu je první hráč, viz obrázek 1.2
 Obrázek 1.2: Hra po devíti tazích optimální strategie
 Ať zahraje první hráč kamkoli, druhý hráč bude hrát na další volné políčko v diagonále. První hráč následně zabere třetí volné políčko (jedno už zabral on, na druhé
 hrát nemůže, protože ho zabral protihráč v právě předchozím tahu). Druhému hráč
-už tak pouze zbývá jedno jediné políčko, na které může hrát, které ho dovede k
 11
 
-vítězství, viz obrázek 1.3.
+už tak pouze zbývá jedno jediné políčko, na které může hrát, které ho dovede k
+vítězství, viz obrázek 1.3.
 
 Obrázek 1.3: Možný průběh optimální hry pro poslední diagonálu, tahy očíslované
 
@@ -89,5 +227,545 @@ Databáze
 
 Jako databáze k aplikaci byla zvolena PostgreSQL, jelikož se v dnešní době jedná o
 jednu z nejpoužívanějších a nejoblíbenějších databází [4].
+Schéma databáze je pouze jedna tabulka GameSession reprezentující jednu hru
+mezi dvěma hráči. Vedle ní také enum GridFieldState reprezentující stav jednoho
+hracího políčka (je prázdné, hrál na něj pouze první hráč, hrál na něj pouze druhý
+hráč, hráli na něj oba hráči) a enum GameState reprezentující stav hry (čeká se na
+druhého hráče, první hráč je na řadě, druhý hráč je na řadě, první hráč vyhrál,
+druhý hráč vyhrál).
+Každá GameSession má identifikátor id, který je pouze pro interní použití, uživatelům se však zveřejňuje identifikátor slug (v doslovném překladu slimák, v informačních technologiích termín používaný pro uživatelsky čitelný identifikátor), který
+se používá i v URL adrese.
+Úryvek 2.1 Schéma databáze
+enum GridFieldState {
+2
+empty
+3
+player1in
+4
+player2in
+5
+both
+6 }
+1
+
+7
+
+enum GameState {
+9
+inviting
+10
+player1plays
+11
+player2plays
+12
+player1won
+13
+player2won
+14 }
+8
+
+15
+
+model GameSession {
+id
+String
+@ id @ default ( cuid () )
+18
+createdAt
+DateTime
+@ default ( now () )
+19
+updatedAt
+DateTime
+@ updatedAt
+20
+slug
+String
+@ unique
+21
+player1
+String ?
+22
+player2
+String ?
+23
+visible
+Boolean
+24
+state
+GameState
+@ default ( inviting )
+25
+lastPos
+Int
+@ default ( - 1 )
+26
+grid
+GridFieldState [ ]
+@ default ( [ empty , empty , empty
+,→ , empty , empty , empty , empty , empty , empty ] )
+27 }
+16
+17
 
 14
+
+2.3
+
+Komunikace se serverem
+
+Komunikace mezi klientem (prohlížečem) a serverem je řešena pomocí tRPC a WebSocketů. WebSocket umožňuje oboustrannou komunikaci mezi klientem a serverem
+bez nutnosti pravidelného dotazování se serveru na změny [5]. tRPC zajišťuje validaci a čtení dat (společně s knihovnou zod, v kódu zkracováno na z) a poskytuje
+lepší vývojářský prožitek (developer experience) sdílením a odvozováním typových
+anotací. Tedy když programátor na back-endu napíše funkci, která bere jedno číslo
+a jeden text (string), i v kódu na front-endu mu našeptávání v editoru bude doporučovat číslo a text a ukáže chybu, pokud by programátor napsal argumenty k funkci
+špatně. Tím se odlišuje od tradičních komunikačních technologiích jako je REST, u
+kterých je běžné předat vzdálené funkci špatné argumenty, obzvláště pokud daný
+kód píše více vývojářů.
+Příklad efektivního využití tRPC je vidět na back-endové funkci, která se stará o zahrání tahu hráčem. Funkce přijímá tři argumenty: slug (specifický string označující
+hru, kterou hráč hraje), playerId (specifický string označující hráče), buttonIndex
+(číslo 0–8 označující herní políčko, do kterého chce hráč zahrát). Všechny argumenty
+jsou automaticky přeloženy do jejich správných datových typů, aby se s nimi dalo
+nadále pracovat. Pokud by přišla nevalidní data (ať už chybou na front-endu nebo
+například od útočníka), automaticky se vrátí error.
+Úryvek 2.2 Funkce pro zahrání tahu
+makeMove : publicProcedure
+2
+.input ( z.object ({
+3
+slug : zodSlug () ,
+4
+playerId : z.string () ,
+5
+buttonIndex : z.number () .min ( 0 ) .max ( 8 ) ,
+6
+}) )
+7
+.mutation ( async ({ input : { slug , playerId , buttonIndex } })
+,→ = > {
+8
+console.log ( ` hrac $ { playerId } ve hre $ { slug } hraje na
+,→ policko $ { buttonIndex } `) ;
+9
+// zbytek kodu pro zahrani tahu
+1
+
+Daná funkce se volá na front-endu po kliknutí na herní políčko se správnými argumenty. Kdyby byl nějaký argument vynechán, byl předáván jako špatný datový typ
+nebo nějaký přebýval, vyhodil by se error.
+Úryvek 2.3 Volání funkce pro zahrání tahu
+1
+2
+
+await m a k e M o v e M u t a t i o n . m u t a t e A s y n c ({
+slug ,
+
+15
+
+playerId ,
+buttonIndex ,
+
+3
+4
+5
+
+}) ;
+
+2.3.1
+
+Připojování do hry
+
+Samotné schéma komunikace v implementaci TickoaTTwo je rozdělené na několik
+částí. Některé jsou rozdílné pro prvního hráče (který hru vytváří a následně se do
+ní připojuje) a pro druhého hráče (který se do hry pouze připojuje).
+V případě prvního hráče musí uživatel kliknout na tlačítko CREATE GAME (vytvořit hru), kód na server pošle příkaz createNewGame (vytvořit novou hru) bez
+jakýchkoli argumentů, server vygeneruje slug a vytvoří novou hru s danou hodnotou slug, zbylé hodnoty se ponechají výchozí podle schématu 2.1. Informace o
+nově vytvořené hře jsou vráceny na klienta a kód přesměruje prohlížeč na URL
+/{newGame.slug} (kde {newGame.slug} je slug nově vytvořené hry, viz 2.2).
+
+Klient
+
+Server
+createNewGame()
+
+newGame
+
+vytvoří hru
+
+přesměruje na
+/{newGame.slug}
+
+Obrázek 2.1: Schéma komunikace vytváření nové hry
+Oba hráči se do hry připojují stejným způsobem, nějak se dostanou na adresu
+/{slug}. Jak je popsáno v kapitole TODO. V tu chvíli kód pošle na server příkaz
+connectPlayer (připojit hráče) s argumentem slug, server zjistí, zda hra s daným
+slugem existuje a zda je v ní alespoň jedno volné místo, a pokud ano, vygeneruje
+pro hráče unikátní ID, které uloží do player1 nebo player2 podle toho, zda se do
+hry připojuje jako první nebo druhý hráč. Server zpět vrátí informaci o tom, zda
+hráč je player1 nebo player2 a jeho unikátní ID, to front-end následně používá
+pro autentifikaci.
+
+16
+
+V případě připojení druhého hráče je ještě potřeba nastavit stav hry na
+player1plays a přes WebSocket poslat prvnímu hráči informaci o změně
+herních dat.
+Klient
+přijde na
+/{kód hry}
+
+Server
+
+(Klient)
+(player1)
+
+connectPlayer()
+
+playerInfo
+
+připojí hráče
+GameUpdated
+
+pokračuje do hry
+
+Obrázek 2.2: Schéma komunikace připojování do hry1
+Když oba hráči získají svoje ID, mohou si získat aktuální herní data a připojit se k
+odběru nových herních dat. K tomu slouží příkazy getGameData (získat herní data)
+a newGameDataSubscription (nový odběr herních dat). První herní data pouze
+jednorázově získá, druhý však přijímá zprávy poslané serverem a když se herní data
+změní, vždy přepíše data získaná prvním příkazem daty novými. Nová data ze strany
+serveru přicházejí vždy, když jakýkoli hráč zahraje tah (případně vyhraje), nebo
+když se do hry připojí nový hráč (takovou informaci samozřejmě dostává pouze
+první hráč, který do hry už připojený je a pro nové informace už poslouchá, viz
+obrázek 2.2).
+
+1
+
+čárkovaná šipka nastává pouze v případě, že se nový hráč připojuje do už existující hry a tedy je
+potřeba již připojenému hráči oznámit změnu stavu hry
+
+17
+
+Klient
+
+Server
+getGameData()
+
+gameData
+
+newGameDataSubscription()
+
+Obrázek 2.3: Schéma komunikace získávání herních dat
+
+2.3.2
+
+Hraní tahů
+
+V tuto chvíli jsou oba hráči ve stejné fázi, tedy vidí před sebou hru, mají herní data
+(stav hry je player1plays, protože začíná první hráč) a poslouchají pro příchozí
+změny stavy hry od serveru.
+Když hráč, který je na tahu, zahraje tah, pošle se na server příkaz makeMove. Je-li
+tah validní, uloží se do databáze a oběma hráčům se pošle oznámení GameUpdated
+o novém stavu hry (viz sekce 2.4). Toto se opakuje pro každý tah, až dokud hra
+neskončí.
+Samotný konec hry (výhra jednoho z hráčů) není nic víc než jen změna stavu hry
+na player1won nebo player2won.
+
+18
+
+Klient
+player1
+zahraje tah
+
+Klient
+player2
+
+Server
+makeMove()
+uloží tah
+
+GameUpdated
+
+GameUpdated
+
+makeMove()
+
+zahraje tah
+
+uloží tah
+GameUpdated
+
+GameUpdated
+
+Obrázek 2.4: Schéma komunikace zahrání dvou tahů
+
+2.3.3
+
+Opakování hry
+
+Po skončení hry si uživatelé většinou chtějí zahrát další kolo hry2 , proto se jim po
+skončení hry zobrazí tlačítko RENEW GAME (obnovit hru). To na server pošle
+příkaz renewGame. Server vytvoří novou hry stejným způsobem jako se hra vytváří
+normálně a pošle oběma klientům zprávu RenewGame se slugem nové hry. Frontend přesměruje prohlížeč na /{newSlug} a znovu se opakuje celý proces připojení
+počínající příkazem connectPlayer.
+
+2.4
+
+Implementace pravidel
+
+Vedle samotného průběhy hry je potřeba umět rozpoznat, zda hráč hraje validní tah,
+zda hráč svým tahem vyhrál. Server též musí umět aktualizovat stav hrací plochy
+po zahraném tahu.
+
+2.4.1
+
+Validace tahu
+
+Zda je hráčův tah validní v kódu zjišťuje funkce isMoveValid. Funkce přijímá čtyři
+argumenty:
+1. grid (pole GridFieldState): hrací plocha reprezentovaná podle definice v
+sekci 2.2
+
+2
+
+nejčastější připomínka testerů
+
+19
+
+2. buttonIndex (číslo): ID herního políčka, na které chce hráč hrát, podle definice
+v sekci 2.2
+3. player (text player1, nebo text player2): role hráče, který tah chce zahrát
+4. lastPos (číslo): ID herního políčka, na které se hrálo v předchozím tahu, nebo
+−1 při prvním tahu
+Funkce zkontroluje, zda buttonIndex náhodou není nevalidní hodnota, zda hráč
+nehraje na políčko, na které se hrálo v předhozím tahu, a zda nehraje na políčko,
+na které už hrál buď pouze on, nebo oba hráči. Pokud se ani jedno nestane, tah je
+validní.
+Funkce neřeší, zda hraje hráč, který je na řadě.
+Úryvek 2.4 Funkce isMoveValid
+/** @param lastPos use -1 for initial move */
+2 const isMoveValid = ( grid : GridFieldState [] , buttonIndex : number ,
+,→ player : ' player 1 ' | ' player 2 ' , lastPos : number ) = > {
+3
+if ( buttonIndex < 0 || buttonIndex > 8 )
+4
+return false ;
+5
+if ( buttonIndex === lastPos )
+6
+return false ;
+7
+const currentValue = grid [ buttonIndex ];
+8
+if ( currentValue === `$ { player } in ` || currentValue === ' both '
+,→ )
+9
+return false ;
+10
+return true ;
+11 };
+1
+
+2.4.2
+
+Změna hrací plochy
+
+Chceme-li zahrát tah, je potřeba ho zapsat do hrací plochy, to zajišťuje funkce
+updateGrid. Funkce přijímá tři argumenty:
+1. grid (pole GridFieldState): hrací plocha reprezentovaná podle definice v
+sekci 2.2
+2. buttonIndex (číslo): ID herního políčka, na které chce hráč hrát, podle definice
+v sekci 2.2
+3. player (text player1, nebo text player2): role hráče, který tah chce zahrát
+
+20
+
+Funkce získá aktuální hrací políčko a pokud do něj zatím nikdo nehrál (stav empty3 ),
+zapíše do něj, že na něj zahrál aktuální hráč, pokud na políčko ale už hrál protihráč,
+zapíše na aktuální políčko, že na něj už hráli oba hráči (stav both).
+Funkce očekává, že isMoveValid proběhlo úspěšně.
+Funkce neřeší ukládání stavu do databáze, pouze měnění na stav nový.
+Úryvek 2.5 Funkce updateGrid
+/** assumes isMoveValid === true */
+2 const updateGrid = ( grid : GridFieldState [] , buttonIndex : number ,
+,→ player : ' player 1 ' | ' player 2 ') = > {
+3
+const currentValue = grid [ buttonIndex ]!;
+4
+const newValue = currentValue === ' empty ' ? `$ { player } in ` as
+,→ const : ' both ';
+5
+const newGrid = [ ...grid ];
+6
+newGrid [ buttonIndex ] = newValue ;
+7
+return newGrid ;
+8 };
+1
+
+2.4.3
+
+Zjišťování výhry
+
+Po tom, co hráč zahraje tah, je potřeba zjistit, zda nevyhrál hru. K tomu slouží
+funkce isGameWon. Funkce přijímá jeden jediný argument, tedy hrací plochu ve
+stejném formátu jako předchozí dvě funkce.
+Funkce si definuje vlastní interní funkci allBoth, která přijímá tři argumenty (čísla).
+Interní funkce získá stavy políček určenými svými třemi argumenty a pro každé
+zkontroluje, zda je stav both.
+Funkce isGameWon následně zavolá interní funkce allBoth pro všechny tři horizontály, tři vertikály a dvě diagonály. Pokud nastane jedna z výherních pozic, hra je
+vyhraná.
+Funkce neřeší, kdo hru vyhrál.
+Úryvek 2.6 Funkce isGameWon
+/** call after updateGrid */
+2 const isGameWon = ( grid : GridFieldState []) = > {
+3
+const allBoth = ( a : number , b : number , c : number ) = >
+4
+grid [ a ] === ' both ' && grid [ b ] === ' both ' && grid [ c ] === '
+,→ both ';
+1
+
+5
+6
+7
+
+3
+
+// rows
+if ( allBoth ( 0 , 1 , 2 ) )
+
+viz 2.1
+
+21
+
+return true ;
+if ( allBoth ( 3 , 4 , 5 ) )
+return true ;
+if ( allBoth ( 6 , 7 , 8 ) )
+return true ;
+
+8
+9
+10
+11
+12
+13
+
+// columns
+if ( allBoth ( 0 , 3 , 6 ) )
+return true ;
+if ( allBoth ( 1 , 4 , 7 ) )
+return true ;
+if ( allBoth ( 2 , 5 , 8 ) )
+return true ;
+
+14
+15
+16
+17
+18
+19
+20
+21
+
+// diagonals
+if ( allBoth ( 0 , 4 , 8 ) )
+return true ;
+if ( allBoth ( 2 , 4 , 6 ) )
+return true ;
+
+22
+23
+24
+25
+26
+27
+
+// :(
+return false ;
+
+28
+29
+30
+
+};
+
+22
+
+Závěr
+
+Literatura
+[1] Oats Jenkins. I Made BETTER Tic-Tac-Toe. 28. říjen 2022. url: https://
+www.youtube.com/watch?v=ePxrVU4M9uA.
+[2] Kevin Crowley a Robert S Siegler. „Flexible strategy use in young children’s
+tic-tac-toe“. In: Cognitive Science 17.4 (1993), s. 531–561. url: https : / /
+onlinelibrary.wiley.com/doi/pdfdirect/10.1207/s15516709cog1704_3.
+[3] Julius Marminge et al. Introduction – Create T3 App. 2022. url: https://
+create.t3.gg/en/introduction.
+[4] Stack Overflow. Stack Overflow Developer Survey 2023. 14. červen 2023. url:
+https://survey.stackoverflow.co/2023/ (cit. 19. 11. 2023).
+[5] Mozilla Developer Network. The WebSocket API (WebSockets). url: https:
+/ / developer . mozilla . org / en - US / docs / Web / API / WebSockets _ API (cit.
+22. 11. 2023).
+[6] Vercel and the open-source community. Next.js. url: https://nextjs.org/
+docs.
+
+Seznam úryvků kódu
+2.1
+
+Schéma databáze . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+
+2.2
+
+Funkce pro zahrání tahu . . . . . . . . . . . . . . . . . . . . . . . . . 15
+
+2.3
+
+Volání funkce pro zahrání tahu
+
+2.4
+
+Funkce isMoveValid . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+
+2.5
+
+Funkce updateGrid . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+
+2.6
+
+Funkce isGameWon . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+
+. . . . . . . . . . . . . . . . . . . . . 15
+
+Seznam obrázků
+1.1
+
+Prázdná herní plocha . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+1.2
+
+Hra po devíti tazích optimální strategie . . . . . . . . . . . . . . . . . 11
+
+1.3
+
+Možný průběh optimální hry pro poslední diagonálu, tahy očíslované
+
+2.1
+
+Schéma komunikace vytváření nové hry . . . . . . . . . . . . . . . . . 16
+
+2.2
+
+Schéma komunikace připojování do hry . . . . . . . . . . . . . . . . . 17
+
+2.3
+
+Schéma komunikace získávání herních dat . . . . . . . . . . . . . . . . 18
+
+2.4
+
+Schéma komunikace zahrání dvou tahů . . . . . . . . . . . . . . . . . 19
+
+12
+
+

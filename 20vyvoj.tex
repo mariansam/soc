@@ -37,11 +37,14 @@ pouze druhý hráč, hráli na něj oba hráči) a enum \M{GameState} reprezentu
 stav hry (čeká se na druhého hráče, první hráč je na řadě, druhý hráč je na
 řadě, první hráč vyhrál, druhý hráč vyhrál).
 
-
 Každá \M{GameSession} má identifikátor \M{id}, který je pouze pro interní
 použití, uživatelům se však zveřejňuje identifikátor \M{slug} (v doslovném
 překladu slimák, v informačních technologiích termín používaný pro uživatelsky
 čitelný identifikátor), který se používá i v URL adrese.\label{par:game-id}
+
+\label{par:game-grid}
+Hrací plocha je reprezentována jako pole devíti \M{GridFieldState} po řádcích
+od levého horního políčka. Políčka jsou v programu reprezentována čísly 0 až 8.
 
 \begin{lstlisting}[language=Prisma,caption={Schéma databáze},label={fig:db-schema}]
 enum GridFieldState {
@@ -112,13 +115,15 @@ Daná funkce se volá na front-endu po kliknutí na herní políčko se správn�
 argumenty. Kdyby byl nějaký argument vynechán, byl předáván jako špatný datový
 typ nebo nějaký přebýval, vyhodil by se error.
 
-\begin{lstlisting}[language=JavaScript,caption={Volání funkce pro zahrání tahu},label={fig:fe-make-move}]
+\begin{lstlisting}[language=JavaScript,caption={Volání funkce pro zahrání tahu},label={lst:make-move}]
 await makeMoveMutation.mutateAsync({
     slug,
     playerId,
     buttonIndex,
 });
 \end{lstlisting}
+
+\subsection{Připojování do hry}
 
 Samotné schéma komunikace v implementaci TickoaTTwo je rozdělené na několik
 částí. Některé jsou rozdílné pro prvního hráče (který hru vytváří a následně se
@@ -135,7 +140,7 @@ je slug nově vytvořené hry, viz \ref{par:game-id}).
 \begin{figure}[h]
     \centering
     \includegraphics[width=300px]{img/diagrams/create-new-game.pdf}
-    \caption{XYz}
+    \caption{Schéma komunikace vytváření nové hry}
     \label{fig:create-new-game}
 \end{figure}
 
@@ -152,15 +157,197 @@ V případě připojení druhého hráče je ještě potřeba nastavit stav hry 
 \M{player1plays} a přes WebSocket poslat prvnímu hráči informaci o změně
 herních dat.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=360px]{img/diagrams/connect-game.pdf}\hspace*{80px}
+    \caption[Schéma komunikace připojování do hry]{Schéma komunikace připojování do hry\footnotemark}
+    \label{fig:connect-game}
+\end{figure}
+
+\footnotetext{čárkovaná šipka nastává pouze v případě, že se nový hráč
+připojuje do už existující hry a tedy je potřeba již připojenému hráči oznámit
+změnu stavu hry}
+
 Když oba hráči získají svoje ID, mohou si získat aktuální herní data a připojit
 se k odběru nových herních dat. K tomu slouží příkazy \M{getGameData} (získat
 herní data) a \M{newGameDataSubscription} (nový odběr herních dat). První herní
 data pouze jednorázově získá, druhý však přijímá zprávy poslané serverem a když
-se herní data změní, vždy přepíše data získaná prvním příkazem.
+se herní data změní, vždy přepíše data získaná prvním příkazem daty novými.
+Nová data ze strany serveru přicházejí vždy, když jakýkoli hráč zahraje tah
+(případně vyhraje), nebo když se do hry připojí nový hráč (takovou informaci
+samozřejmě dostává pouze první hráč, který do hry už připojený je a pro nové
+informace už poslouchá, viz obrázek \ref{fig:connect-game}).
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=300px]{img/diagrams/connect-game.pdf}
-    \caption{XYz}
-    \label{fig:connect-game}
+    \includegraphics[width=240px]{img/diagrams/get-game-data.pdf}
+    \caption{Schéma komunikace získávání herních dat}
+    \label{fig:get-game-data}
 \end{figure}
+
+\subsection{Hraní tahů}
+
+V tuto chvíli jsou oba hráči ve stejné fázi, tedy vidí před sebou hru, mají
+herní data (stav hry je \M{player1plays}, protože začíná první hráč) a
+poslouchají pro příchozí změny stavy hry od serveru.
+
+Když hráč, který je na tahu, zahraje tah, pošle se na server příkaz \M{makeMove}.
+Je-li tah validní, uloží se do databáze a oběma hráčům se pošle oznámení
+\M{GameUpdated} o novém stavu hry (viz sekce \ref{sec:rules-implementation}).
+Toto se opakuje pro každý tah, až dokud hra neskončí.
+
+Samotný konec hry (výhra jednoho z hráčů) není nic víc než jen změna stavu hry
+na \M{player1won} nebo \M{player2won}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=360px]{img/diagrams/make-move.pdf}
+    \caption{Schéma komunikace zahrání dvou tahů}
+    \label{fig:make-move}
+\end{figure}
+
+\subsection{Opakování hry}
+Po skončení hry si uživatelé většinou chtějí zahrát další kolo
+hry\footnote{nejčastější připomínka testerů}, proto se jim po skončení hry
+zobrazí tlačítko \It{RENEW GAME} (obnovit hru). To na server pošle příkaz
+\M{renewGame}. Server vytvoří novou hry stejným způsobem jako se hra vytváří
+normálně a pošle oběma klientům zprávu \M{RenewGame} se slugem nové hry.
+Front-end přesměruje prohlížeč na \M{/\{newSlug\}} a znovu se opakuje celý
+proces připojení počínající příkazem \M{connectPlayer}.
+
+\section{Implementace pravidel}\label{sec:rules-implementation}
+
+Vedle samotného průběhy hry je potřeba umět rozpoznat, zda hráč hraje validní
+tah, zda hráč svým tahem vyhrál. Server též musí umět aktualizovat stav hrací
+plochy po zahraném tahu.
+
+\subsection{Validace tahu}
+Zda je hráčův tah validní v kódu zjišťuje funkce \M{isMoveValid}. Funkce
+přijímá čtyři argumenty:
+\begin{enumerate}
+    \item \M{grid} (pole \M{GridFieldState}): hrací plocha reprezentovaná podle
+        definice v sekci \ref{par:game-grid}
+    \item \M{buttonIndex} (číslo): ID herního políčka, na které chce hráč hrát,
+        podle definice v sekci \ref{par:game-grid}
+    \item \M{player} (text \M{player1}, nebo text \M{player2}): role hráče,
+        který tah chce zahrát
+    \item \M{lastPos} (číslo): ID herního políčka, na které se hrálo v
+        předchozím tahu, nebo $-1$ při prvním tahu
+\end{enumerate}
+
+Funkce zkontroluje, zda \M{buttonIndex} náhodou není nevalidní hodnota, zda
+hráč nehraje na políčko, na které se hrálo v předhozím tahu, a zda nehraje na
+políčko, na které už hrál buď pouze on, nebo oba hráči. Pokud se ani jedno
+nestane, tah je validní.
+
+Funkce neřeší, zda hraje hráč, který je na řadě.
+
+\begin{lstlisting}[language=JavaScript,caption={Funkce \M{isMoveValid}},label={lst:is-move-valid}]
+/** @param lastPos use -1 for initial move */
+const isMoveValid = (grid: GridFieldState[], buttonIndex: number, player: 'player1' | 'player2', lastPos: number) => {
+    if (buttonIndex < 0 || buttonIndex > 8)
+        return false;
+    if (buttonIndex === lastPos)
+        return false;
+    const currentValue = grid[buttonIndex];
+    if (currentValue === `${player}in` || currentValue === 'both')
+        return false;
+    return true;
+};
+\end{lstlisting}
+
+\subsection{Změna hrací plochy}
+Chceme-li zahrát tah, je potřeba ho zapsat do hrací plochy, to zajišťuje funkce
+\M{updateGrid}. Funkce přijímá tři argumenty:
+\begin{enumerate}
+    \item \M{grid} (pole \M{GridFieldState}): hrací plocha reprezentovaná podle
+        definice v sekci \ref{par:game-grid}
+    \item \M{buttonIndex} (číslo): ID herního políčka, na které chce hráč hrát,
+        podle definice v sekci \ref{par:game-grid}
+    \item \M{player} (text \M{player1}, nebo text \M{player2}): role hráče,
+        který tah chce zahrát
+\end{enumerate}
+
+Funkce získá aktuální hrací políčko a pokud do něj zatím nikdo nehrál (stav
+\M{empty}\footnote{viz \ref{fig:db-schema}}), zapíše do něj, že na něj zahrál
+aktuální hráč, pokud na políčko ale už hrál protihráč, zapíše na aktuální
+políčko, že na něj už hráli oba hráči (stav \M{both}).
+
+Funkce očekává, že \M{isMoveValid} proběhlo úspěšně.
+
+Funkce neřeší ukládání stavu do databáze, pouze měnění na stav nový.
+
+\begin{lstlisting}[language=JavaScript,caption={Funkce \M{updateGrid}},label={lst:update-grid}]
+/** assumes isMoveValid === true */
+const updateGrid = (grid: GridFieldState[], buttonIndex: number, player: 'player1' | 'player2') => {
+    const currentValue = grid[buttonIndex]!;
+    const newValue = currentValue === 'empty' ? `${player}in` as const : 'both';
+    const newGrid = [...grid];
+    newGrid[buttonIndex] = newValue;
+    return newGrid;
+};
+\end{lstlisting}
+
+\subsection{Zjišťování výhry}
+Po tom, co hráč zahraje tah, je potřeba zjistit, zda nevyhrál hru. K tomu
+slouží funkce \M{isGameWon}. Funkce přijímá jeden jediný argument, tedy hrací
+plochu ve stejném formátu jako předchozí dvě funkce.
+
+Funkce si definuje vlastní interní funkci \M{allBoth}, která přijímá tři
+argumenty (čísla). Interní funkce získá stavy políček určenými svými třemi
+argumenty a pro každé zkontroluje, zda je stav \M{both}.
+
+Funkce \M{isGameWon} následně zavolá interní funkce \M{allBoth} pro všechny tři
+horizontály, tři vertikály a dvě diagonály. Pokud nastane jedna z výherních
+pozic, hra je vyhraná.
+
+Funkce neřeší, kdo hru vyhrál.
+
+\begin{lstlisting}[language=JavaScript,caption={Funkce \M{isGameWon}},label={lst:is-game-won}]
+/** call after updateGrid */
+const isGameWon = (grid: GridFieldState[]) => {
+    const allBoth = (a: number, b: number, c: number) =>
+        grid[a] === 'both' && grid[b] === 'both' && grid[c] === 'both';
+
+    // rows
+    if (allBoth(0, 1, 2))
+        return true;
+    if (allBoth(3, 4, 5))
+        return true;
+    if (allBoth(6, 7, 8))
+        return true;
+
+    // columns
+    if (allBoth(0, 3, 6))
+        return true;
+    if (allBoth(1, 4, 7))
+        return true;
+    if (allBoth(2, 5, 8))
+        return true;
+
+    // diagonals
+    if (allBoth(0, 4, 8))
+        return true;
+    if (allBoth(2, 4, 6))
+        return true;
+
+    // :(
+    return false;
+};
+\end{lstlisting}
+
+\section{Uživatelské rozhranní}
+
+Design stránky by po vzoru autora měl působit hravě, neseriózně a zábavně.
+Proto byly při tvorbě uživatelského rozhraní použity výrazné barvy a font Comic
+Sans, který je považován za jeden z nejvíce nevhodně používaných fontů písma
+\cite{seddon2011}.
+
+Hráči, který vytvořil hru a čeká, než se připojí jeho protihráč, se zobrazuje
+QR kód s odkazem do hry, aby ho mohl druhý hráč naskenovat svým mobilním
+telefonem, a odkaz do hry, který lze zkopírovat a protihráči ho poslat online.
+Jednoduchá možnost sdílení herního odkazu byl jeden z hlavních požadavků při
+testování s uživateli během vývoje.
+
+Hrací plocha je v prohlížeči vykreslena vektorově jako SVG pomocí několika
+React komponentů.

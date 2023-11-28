@@ -28,6 +28,7 @@
 \renewcommand{\lstlistingname}{Úryvek}
 \renewcommand{\lstlistlistingname}{Seznam úryvků kódu}
 \usepackage[left=3.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
+\usepackage[all]{nowidow}
 
 \newcommand*{\noaddvspace}{\renewcommand*{\addvspace}[1]{}}
 \addtocontents{lof}{\protect\noaddvspace}
@@ -82,7 +83,13 @@
 
 %%% Poděkování
 \makethanks{
-	díky
+    Mé poděkování patří v první řadě paní profesorce Mgr. Markétě Wolfové za
+    vedení mé práce a podpoře mě i mých spolužáků.
+
+    Dále pak Jakubovi Hamplovi, se kterým jsme celý proces psaní odborné práci
+    prošli spolu, Kateřině Michálkové za psychickou podporu, Matějovi Volfovi
+    za pomoc s hledáním optimální strategie a celé skupině 0d9e.tech za
+    kritickou zpětnou vazbu, vyrušování od práce a zvedání nálady.
 }
 
 
@@ -90,22 +97,22 @@
 \pagestyle{empty}
 
 \section*{Anotace}
-Práce popisuje implementaci hry TickoaTTwo popsané ve videu
-\href{https://www.youtube.com/watch?v=ePxrVU4M9uA}{I Made BETTER Tic-Tac-Toe}
-jako webové aplikace a analýzu této hry z pohledu teorie her.
+Práce popisuje implementaci hry TickoaTTwo popsané ve videu I Made BETTER
+Tic-Tac-Toe (Udělal jsem lepší piškvorky) jako webové aplikace a analýzu této
+hry z pohledu teorie her.
 
 \subsection*{Klíčová slova}
-piškvorky, tickoattwo, webová aplikace
+piškvorky, TickoaTTwo, webová aplikace, T3 Stack
 
 \vspace{20mm}
 
 \section*{Annotation}
-This thesis describes the implementation of the game TickoaTTwo described in the video
-\href{https://www.youtube.com/watch?v=ePxrVU4M9uA}{I Made BETTER Tic-Tac-Toe}
-as a web application and analyzes it from the game theory point of view.
+This thesis describes the implementation of the game TickoaTTwo described in
+the video I Made BETTER Tic-Tac-Toe as a web application and analyzes it from
+the game theory point of view.
 
 \subsection*{Keywords}
-tick-tac-toe, tickoattwo, web application
+tick-tac-toe, TickoaTTwo, web application, T3 Stack
 
 
 %%% Obsah
@@ -119,7 +126,7 @@ tick-tac-toe, tickoattwo, web application
 \setcounter{table}{0}
 \newpage
 \pagenumbering{arabic}
-\setcounter{page}{9}  %% TODO
+\setcounter{page}{7}  %% TODO
 
 %%% Úvod
 \input{00uvod.tex}
