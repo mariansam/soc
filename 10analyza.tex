@@ -14,8 +14,8 @@ na obrázku \ref{fig:empty-board}.
     \label{fig:empty-board}
 \end{figure}
 
-\footnotetext{všechny obrázky v práci jsou vlastní
-práce autora, v případě herních ploch se jedná o snímky obrazovky z webové
+\footnotetext{všechny obrázky v~práci jsou vlastní
+práce autora, v~případě herních ploch se jedná o~snímky obrazovky z~webové
 aplikace popsané níže}
 
 TickoaTTwo proti sobě hrají dva hráči, kteří se střídají v~tazích. Jeden hráč
@@ -26,11 +26,12 @@ v~jeho posledním tahu.
 
 Není dáno, který hráč začíná.
 
-Cílem každého hráče je dokončit řadu, sloupec či diagonálu, do které už hráli
-oba dva hráči. Hra tedy končí ve stavu, kdy na hrací ploše je alespoň jedna
-řada, sloupec či diagonála, ve které jsou tři \enquote{téčka}/\enquote{pluska}
-(svislá čára od jednoho hráče, vodorovná čára od druhého hráče), podle toho i
-stylizovaný název hry se třemi velkými písmeny~T.
+Cílem každého hráče je dokončit řadu, sloupec či diagonálu, ve které už do
+každého políčka hráli oba dva hráči. Hra tedy končí ve stavu, kdy na hrací
+ploše je alespoň jedna řada, sloupec či diagonála, ve které jsou tři
+\enquote{téčka}/\enquote{pluska} (svislá čára od jednoho hráče, vodorovná čára
+od druhého hráče), podle toho i stylizovaný název hry se třemi velkými
+písmeny~T.
 
 
 % počet her: na každém políčku čtyři, to však děleno 4 protože 4 rotace
@@ -38,19 +39,20 @@ stylizovaný název hry se třemi velkými písmeny~T.
 % WRONG nejrychlejší hra 15 (? pět T, 4 samostatné, patnáctý ukončí), u klasických 9
 
 \section{Optimální strategie}
-Zatímco klasické 3x3 piškvorky vždy končí remízou pokud hrají oba dva hráči optimálně
+Zatímco klasické 3x3 piškvorky vždy končí remízou, pokud hrají oba dva hráči optimálně
 \cite{crowley1993}, tak u~TickoaTTwo nelze končit remízou. Budou-li oba hráči hrát
 optimálně, vyhrává druhý hráč. Základním pravidlem je nevytvořit tři vlastní
 znaky v~jedné vertikále/horizontále/diagonále, protože tím bychom dali
 protihráči možnost je jednoduše doplnit a vyhrát. Nejhorší herní políčko je
 tedy to prostřední, protože se v~něm protínají hned čtyři
 vertikály/horizontály/diagonály (na rozdíl od klasických piškvorek, kde
-prostřední políčko je jedno z~nejvíce žádaných \cite{xkcd832})
+prostřední políčko je jedno z~nejvíce žádaných \cite{xkcd832}).
 
-Optimální strategie pro druhého hráče je co nejdéle hrát naproti prvnímu hráči.
-Jelikož první hráč nechce zabrat tři sousední políčka nebo hrát doprostřed, hra
-se dostane do stavu, kde je šest políček plně zaplněno, uprostřed je jedna
-volná diagonála a na tahu je první hráč, viz obrázek \ref{fig:empty-diagonal}
+Optimální strategie pro druhého hráče je co nejdéle hrát středově souměrně
+naproti prvnímu hráči. Jelikož první hráč nechce zabrat tři sousední políčka
+nebo hrát doprostřed, hra se dostane do stavu, kde je šest políček plně
+zaplněno, uprostřed je jedna volná diagonála a na tahu je první hráč, viz
+obrázek \ref{fig:empty-diagonal}.
 
 \begin{figure}[h]
     \centering
@@ -60,10 +62,11 @@ volná diagonála a na tahu je první hráč, viz obrázek \ref{fig:empty-diagon
 \end{figure}
 
 Ať zahraje první hráč kamkoli, druhý hráč bude hrát na další volné políčko
-v~diagonále. První hráč následně zabere třetí volné políčko (jedno už zabral on,
-na druhé hrát nemůže, protože ho zabral protihráč v~právě předchozím tahu).
-Druhému hráč už tak pouze zbývá jedno jediné políčko, na které může hrát, které
-ho dovede k~vítězství, viz obrázek \ref{fig:last-diagonal}.
+v~diagonále (na stejné hrát nemůže, protože na něj hrál protihráč v~jeho
+posledním tahu). První hráč následně zabere třetí volné políčko (jedno už
+zabral on, na druhé hrát nemůže, protože ho zabral protihráč v~právě předchozím
+tahu). Druhému hráč už tak pouze zbývá jedno jediné políčko, na které může
+hrát, které ho dovede k~vítězství, viz obrázek \ref{fig:last-diagonal}.
 
 \begin{figure}[h]
     \centering

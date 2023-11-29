@@ -38,7 +38,7 @@ Seznam technologií použitých:
     \item \B{TailwindCSS:} Knihovna pro rychlé stylování webových aplikací.
 \end{itemize}
 
-Častou součástí této sady technologií též bývá NextAuth.js, které řeší
+Častou součástí této sady technologií též bývá knihovna NextAuth.js, která řeší
 přihlašování, registraci a správu uživatelů. Jelikož naše aplikace registraci
 uživatelů neumožňuje, není taková knihovna potřeba.
 
@@ -48,7 +48,7 @@ Jako databáze k~aplikaci byla zvolena PostgreSQL, jelikož se v~dnešní době
 jedná o~jednu z~nejpoužívanějších a nejoblíbenějších databází \cite{stackoverflow23}.
 
 Schéma databáze je pouze jedna tabulka \M{GameSession} reprezentující jednu hru
-mezi dvěma hráči. Vedle ní také enum\footnote{enum v programovacích jazycích a
+mezi dvěma hráči. Vedle ní také enum\footnote{enum v~programovacích jazycích a
 databázích je množina možných hodnot, kterých může proměnná tohoto typu
 nabývat, hodnoty bývají čitelně pojmenovány, interně se však většinou ukládají
 jinak než jako text} \M{GridFieldState} reprezentující stav jednoho hracího
@@ -67,7 +67,7 @@ Hrací plocha je reprezentována jako pole devíti \M{GridFieldState} po řádc�
 od levého horního políčka. Políčka jsou v~programu reprezentována čísly 0 až 8.
 
 Hodnoty \M{player1} a \M{player2} ukládají ID hráčů, ve schématu databáze jsou
-označeny s otazníkem, protože před připojením daného hráče nabývají hodnoty
+označeny s~otazníkem, protože před připojením daného hráče nabývají hodnoty
 \It{NULL} (prázdné hodnoty).
 
 \begin{lstlisting}[language=Prisma,caption={Schéma databáze},label={fig:db-schema}]
@@ -93,7 +93,6 @@ model GameSession {
     slug        String      @unique
     player1     String?
     player2     String?
-    visible     Boolean
     state       GameState   @default(inviting)
     lastPos     Int         @default(-1)
     grid        GridFieldState[]    @default([empty, empty, empty, empty, empty, empty, empty, empty, empty])
@@ -111,7 +110,7 @@ odvozováním typových anotací. Tedy když programátor na back-endu napíše 
 která bere jedno číslo a jeden text (string), i v~kódu na front-endu mu
 našeptávání v~editoru bude doporučovat číslo a text a ukáže chybu, pokud by
 programátor napsal argumenty k~funkci špatně. Tím se odlišuje od tradičních
-komunikačních technologiích jako je REST, u~kterých je běžné předat vzdálené
+komunikačních technologií jako je REST, u~kterých je běžné předat vzdálené
 funkci špatné argumenty, obzvláště pokud daný kód píše více vývojářů.
 
 Příklad efektivního využití tRPC je vidět na back-endové funkci, která se stará
@@ -168,7 +167,7 @@ je slug nově vytvořené hry, viz \ref{par:game-id}).
     \label{fig:create-new-game}
 \end{figure}
 
-\footnotetext{všechna schémata komunikace byla vytvořena v programu
+\footnotetext{všechna schémata komunikace byla vytvořena v~programu
 diagrams.net \cite{diagrams}}
 
 Oba hráči se do hry připojují stejným způsobem, nějak se dostanou na adresu
@@ -218,7 +217,7 @@ informace už poslouchá, viz obrázek \ref{fig:connect-game}}
 
 V~tuto chvíli jsou oba hráči ve stejné fázi, tedy vidí před sebou hru, mají
 herní data (stav hry je \M{player1plays}, protože začíná první hráč) a
-poslouchají pro příchozí změny stavy hry od serveru.
+poslouchají pro příchozí změny stavu hry od serveru.
 
 Když hráč, který je na tahu, zahraje tah, pošle se na server příkaz \M{makeMove}.
 Je-li tah validní, uloží se do databáze a oběma hráčům se pošle oznámení
@@ -246,7 +245,7 @@ proces připojení počínající příkazem \M{connectPlayer}.
 
 \section{Implementace pravidel}\label{sec:rules-implementation}
 
-Vedle samotného průběhy hry je potřeba umět rozpoznat, zda hráč hraje validní
+Vedle samotného průběhu hry je potřeba umět rozpoznat, zda hráč hraje validní
 tah, zda hráč svým tahem vyhrál. Server též musí umět aktualizovat stav hrací
 plochy po zahraném tahu.
 
@@ -378,7 +377,7 @@ Hráči, který vytvořil hru a čeká, než se připojí jeho protihráč, se z
 QR kód s~odkazem do hry, aby ho mohl druhý hráč naskenovat svým mobilním
 telefonem, a odkaz do hry, který lze zkopírovat a protihráči ho poslat online.
 Jednoduchá možnost sdílení herního odkazu byl jeden z~hlavních požadavků při
-testování s~uživateli během vývoje. K vytvoření QR kódu se používá knihovna
+testování s~uživateli během vývoje. K~vytvoření QR kódu se používá knihovna
 \M{qrcode.react} \cite{react-qr}.
 
 Hrací plocha je v~prohlížeči vykreslena vektorově jako SVG pomocí několika
@@ -386,4 +385,4 @@ React komponentů. V~kódu je zapsaných devět cest, které ohraničují hrací
 políčka. Jednou jsou na vrchu obrázku a se používají pro rozpoznání najetí myši
 na herní políčko. Podruhé jsou na spodku obrázku a používají se pro zvýraznění
 herního políčka, na které uživatel najel myší. Po najetí se zvýrazňují pouze
-políčka, na která uživatel může v danou chvíli kliknout.
+políčka, na která uživatel může v~danou chvíli kliknout.
