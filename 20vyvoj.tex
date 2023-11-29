@@ -3,7 +3,7 @@
 \section{Použité technologie}
 
 Webová online multiplayer hra je implementovaná pomocí technologií, kterým se
-souhrnně říká T3 Stack. Podle oficiální dokumentace \parencite{t3stack} úkolem
+souhrnně říká T3 Stack. Podle oficiální dokumentace \cite{t3stack} úkolem
 technologií T3 Stack je
 
 \begin{enumerate}
@@ -11,10 +11,10 @@ technologií T3 Stack je
         dostupné, ale poskytnout technologie, které jsou základem většiny
         webových aplikací a může být složité je nastavit manuálně.
     \item \B{\enquote{Krvácet} zodpovědně:} Poskytovat technologie, které jsou
-        moderní a atraktivní, ale tak, aby v budoucnu netvořily problémy a
+        moderní a atraktivní, ale tak, aby v~budoucnu netvořily problémy a
         případně se daly nahradit.
     \item \B{Typová bezpečnost není dobrovolná:} Znalost datových typů pomáhá
-        programátorům s vývojem a bezpečným kódem, proto je v moderním vývoji
+        programátorům s~vývojem a bezpečným kódem, proto je v~moderním vývoji
         naprosto nezbytná.
 \end{enumerate}
 
@@ -44,24 +44,31 @@ uživatelů neumožňuje, není taková knihovna potřeba.
 
 \section{Databáze}
 
-Jako databáze k aplikaci byla zvolena PostgreSQL, jelikož se v dnešní době
-jedná o jednu z nejpoužívanějších a nejoblíbenějších databází \cite{stackoverflow23}.
+Jako databáze k~aplikaci byla zvolena PostgreSQL, jelikož se v~dnešní době
+jedná o~jednu z~nejpoužívanějších a nejoblíbenějších databází \cite{stackoverflow23}.
 
 Schéma databáze je pouze jedna tabulka \M{GameSession} reprezentující jednu hru
-mezi dvěma hráči. Vedle ní také enum \M{GridFieldState} reprezentující stav
-jednoho hracího políčka (je prázdné, hrál na něj pouze první hráč, hrál na něj
-pouze druhý hráč, hráli na něj oba hráči) a enum \M{GameState} reprezentující
-stav hry (čeká se na druhého hráče, první hráč je na řadě, druhý hráč je na
-řadě, první hráč vyhrál, druhý hráč vyhrál).
+mezi dvěma hráči. Vedle ní také enum\footnote{enum v programovacích jazycích a
+databázích je množina možných hodnot, kterých může proměnná tohoto typu
+nabývat, hodnoty bývají čitelně pojmenovány, interně se však většinou ukládají
+jinak než jako text} \M{GridFieldState} reprezentující stav jednoho hracího
+políčka (je prázdné, hrál na něj pouze první hráč, hrál na něj pouze druhý
+hráč, hráli na něj oba hráči) a enum \M{GameState} reprezentující stav hry
+(čeká se na druhého hráče, první hráč je na řadě, druhý hráč je na řadě, první
+hráč vyhrál, druhý hráč vyhrál).
 
 Každá \M{GameSession} má identifikátor \M{id}, který je pouze pro interní
-použití, uživatelům se však zveřejňuje identifikátor \M{slug} (v doslovném
-překladu slimák, v informačních technologiích termín používaný pro uživatelsky
-čitelný identifikátor), který se používá i v URL adrese.\label{par:game-id}
+použití, uživatelům se však zveřejňuje identifikátor \M{slug} (v~doslovném
+překladu slimák, v~informačních technologiích termín používaný pro uživatelsky
+čitelný identifikátor), který se používá i v~URL adrese.\label{par:game-id}
 
 \label{par:game-grid}
 Hrací plocha je reprezentována jako pole devíti \M{GridFieldState} po řádcích
-od levého horního políčka. Políčka jsou v programu reprezentována čísly 0 až 8.
+od levého horního políčka. Políčka jsou v~programu reprezentována čísly 0 až 8.
+
+Hodnoty \M{player1} a \M{player2} ukládají ID hráčů, ve schématu databáze jsou
+označeny s otazníkem, protože před připojením daného hráče nabývají hodnoty
+\It{NULL} (prázdné hodnoty).
 
 \begin{lstlisting}[language=Prisma,caption={Schéma databáze},label={fig:db-schema}]
 enum GridFieldState {
@@ -98,21 +105,21 @@ model GameSession {
 Komunikace mezi klientem (prohlížečem) a serverem je řešena pomocí tRPC a
 WebSocketů. WebSocket umožňuje oboustrannou komunikaci mezi klientem a serverem
 bez nutnosti pravidelného dotazování se serveru na změny \cite{mdn-ws}. tRPC
-zajišťuje validaci a čtení dat (společně s knihovnou zod, v kódu zkracováno na
+zajišťuje validaci a čtení dat (společně s~knihovnou zod, v~kódu zkracována na
 \M{z}) a poskytuje lepší vývojářský prožitek (developer experience) sdílením a
 odvozováním typových anotací. Tedy když programátor na back-endu napíše funkci,
-která bere jedno číslo a jeden text (string), i v kódu na front-endu mu
-našeptávání v editoru bude doporučovat číslo a text a ukáže chybu, pokud by
-programátor napsal argumenty k funkci špatně. Tím se odlišuje od tradičních
-komunikačních technologiích jako je REST, u kterých je běžné předat vzdálené
+která bere jedno číslo a jeden text (string), i v~kódu na front-endu mu
+našeptávání v~editoru bude doporučovat číslo a text a ukáže chybu, pokud by
+programátor napsal argumenty k~funkci špatně. Tím se odlišuje od tradičních
+komunikačních technologiích jako je REST, u~kterých je běžné předat vzdálené
 funkci špatné argumenty, obzvláště pokud daný kód píše více vývojářů.
 
 Příklad efektivního využití tRPC je vidět na back-endové funkci, která se stará
-o zahrání tahu hráčem. Funkce přijímá tři argumenty: \M{slug} (specifický
+o~zahrání tahu hráčem. Funkce přijímá tři argumenty: \M{slug} (specifický
 string označující hru, kterou hráč hraje), \M{playerId} (specifický string
 označující hráče), \M{buttonIndex} (číslo 0--8 označující herní políčko, do
 kterého chce hráč zahrát). Všechny argumenty jsou automaticky přeloženy do
-jejich správných datových typů, aby se s nimi dalo nadále pracovat. Pokud by
+jejich správných datových typů, aby se s~nimi dalo nadále pracovat. Pokud by
 přišla nevalidní data (ať už chybou na front-endu nebo například od útočníka),
 automaticky se vrátí error.
 
@@ -142,36 +149,40 @@ await makeMoveMutation.mutateAsync({
 
 \subsection{Připojování do hry}
 
-Samotné schéma komunikace v implementaci TickoaTTwo je rozdělené na několik
+Samotné schéma komunikace v~implementaci TickoaTTwo je rozdělené na několik
 částí. Některé jsou rozdílné pro prvního hráče (který hru vytváří a následně se
 do ní připojuje) a pro druhého hráče (který se do hry pouze připojuje).
 
-V případě prvního hráče musí uživatel kliknout na tlačítko \It{CREATE GAME}
+V~případě prvního hráče musí uživatel kliknout na tlačítko \It{CREATE GAME}
 (vytvořit hru), kód na server pošle příkaz \M{createNewGame} (vytvořit novou
-hru) bez jakýchkoli argumentů, server vygeneruje slug a vytvoří novou hru s
-danou hodnotou \M{slug}, zbylé hodnoty se ponechají výchozí podle schématu
-\ref{fig:db-schema}. Informace o nově vytvořené hře jsou vráceny na klienta a
+hru) bez jakýchkoli argumentů, server vygeneruje slug a vytvoří novou hru
+s~danou hodnotou \M{slug}, zbylé hodnoty se ponechají výchozí podle schématu
+\ref{fig:db-schema}. Informace o~nově vytvořené hře jsou vráceny na klienta a
 kód přesměruje prohlížeč na URL \M{/\{newGame.slug\}} (kde \M{\{newGame.slug\}}
 je slug nově vytvořené hry, viz \ref{par:game-id}).
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=300px]{img/diagrams/create-new-game.pdf}
-    \caption{Schéma komunikace vytváření nové hry}
+    \caption[Schéma komunikace vytváření nové hry]{Schéma komunikace vytváření nové hry\footnotemark}
     \label{fig:create-new-game}
 \end{figure}
 
-Oba hráči se do hry připojují stejným způsobem, nějak se dostanou na adresu
-\M{/\{slug\}}. Jak je popsáno v kapitole TODO. V tu chvíli kód pošle na server
-příkaz \M{connectPlayer} (připojit hráče) s argumentem \M{slug}, server zjistí,
-zda hra s daným slugem existuje a zda je v ní alespoň jedno volné místo, a
-pokud ano, vygeneruje pro hráče unikátní ID, které uloží do \M{player1} nebo
-\M{player2} podle toho, zda se do hry připojuje jako první nebo druhý hráč.
-Server zpět vrátí informaci o tom, zda hráč je \M{player1} nebo \M{player2} a
-jeho unikátní ID, to front-end následně používá pro autentifikaci.
+\footnotetext{všechna schémata komunikace byla vytvořena v programu
+diagrams.net \cite{diagrams}}
 
-V případě připojení druhého hráče je ještě potřeba nastavit stav hry na
-\M{player1plays} a přes WebSocket poslat prvnímu hráči informaci o změně
+Oba hráči se do hry připojují stejným způsobem, nějak se dostanou na adresu
+\M{/\{slug\}}. Jak je popsáno v~kapitole \ref{sec:user-interface}. V~tu chvíli
+kód pošle na server příkaz \M{connectPlayer} (připojit hráče) s~argumentem
+\M{slug}, server zjistí, zda hra s~daným slugem existuje a zda je v~ní alespoň
+jedno volné místo, a pokud ano, vygeneruje pro hráče unikátní ID, které uloží
+do \M{player1} nebo \M{player2} podle toho, zda se do hry připojuje jako první
+nebo druhý hráč. Server zpět vrátí informaci o~tom, zda hráč je \M{player1}
+nebo \M{player2} a jeho unikátní ID, to front-end následně používá pro
+autentifikaci.
+
+V~případě připojení druhého hráče je ještě potřeba nastavit stav hry na
+\M{player1plays} a přes WebSocket poslat prvnímu hráči informaci o~změně
 herních dat.
 
 \begin{figure}[h]
@@ -181,19 +192,20 @@ herních dat.
     \label{fig:connect-game}
 \end{figure}
 
-\footnotetext{čárkovaná šipka nastává pouze v případě, že se nový hráč
+\footnotetext{čárkovaná šipka nastává pouze v~případě, že se nový hráč
 připojuje do už existující hry a tedy je potřeba již připojenému hráči oznámit
 změnu stavu hry}
 
 Když oba hráči získají svoje ID, mohou si získat aktuální herní data a připojit
-se k odběru nových herních dat. K tomu slouží příkazy \M{getGameData} (získat
+se k~odběru nových herních dat. K~tomu slouží příkazy \M{getGameData} (získat
 herní data) a \M{newGameDataSubscription} (nový odběr herních dat). První herní
 data pouze jednorázově získá, druhý však přijímá zprávy poslané serverem a když
 se herní data změní, vždy přepíše data získaná prvním příkazem daty novými.
+
 Nová data ze strany serveru přicházejí vždy, když jakýkoli hráč zahraje tah
-(případně vyhraje), nebo když se do hry připojí nový hráč (takovou informaci
+(případně vyhraje) nebo se do hry připojí nový hráč.\footnote{takovou informaci
 samozřejmě dostává pouze první hráč, který do hry už připojený je a pro nové
-informace už poslouchá, viz obrázek \ref{fig:connect-game}).
+informace už poslouchá, viz obrázek \ref{fig:connect-game}}
 
 \begin{figure}[H]
     \centering
@@ -204,16 +216,16 @@ informace už poslouchá, viz obrázek \ref{fig:connect-game}).
 
 \subsection{Hraní tahů}
 
-V tuto chvíli jsou oba hráči ve stejné fázi, tedy vidí před sebou hru, mají
+V~tuto chvíli jsou oba hráči ve stejné fázi, tedy vidí před sebou hru, mají
 herní data (stav hry je \M{player1plays}, protože začíná první hráč) a
 poslouchají pro příchozí změny stavy hry od serveru.
 
 Když hráč, který je na tahu, zahraje tah, pošle se na server příkaz \M{makeMove}.
 Je-li tah validní, uloží se do databáze a oběma hráčům se pošle oznámení
-\M{GameUpdated} o novém stavu hry (viz sekce \ref{sec:rules-implementation}).
+\M{GameUpdated} o~novém stavu hry (viz sekce \ref{sec:rules-implementation}).
 Toto se opakuje pro každý tah, až dokud hra neskončí.
 
-Samotný konec hry (výhra jednoho z hráčů) není nic víc než jen změna stavu hry
+Samotný konec hry (výhra jednoho z~hráčů) není nic víc než jen změna stavu hry
 na \M{player1won} nebo \M{player2won}.
 
 \begin{figure}[H]
@@ -227,8 +239,8 @@ na \M{player1won} nebo \M{player2won}.
 Po skončení hry si uživatelé většinou chtějí zahrát další kolo
 hry\footnote{nejčastější připomínka testerů}, proto se jim po skončení hry
 zobrazí tlačítko \It{RENEW GAME} (obnovit hru). To na server pošle příkaz
-\M{renewGame}. Server vytvoří novou hry stejným způsobem jako se hra vytváří
-normálně a pošle oběma klientům zprávu \M{RenewGame} se slugem nové hry.
+\M{renewGame}. Server vytvoří novou hru stejným způsobem jako se hra vytváří
+standardně a pošle oběma klientům zprávu \M{RenewGame} se slugem nové hry.
 Front-end přesměruje prohlížeč na \M{/\{newSlug\}} a znovu se opakuje celý
 proces připojení počínající příkazem \M{connectPlayer}.
 
@@ -239,21 +251,23 @@ tah, zda hráč svým tahem vyhrál. Server též musí umět aktualizovat stav 
 plochy po zahraném tahu.
 
 \subsection{Validace tahu}
-Zda je hráčův tah validní v kódu zjišťuje funkce \M{isMoveValid}. Funkce
+Zda je hráčův tah validní v~kódu zjišťuje funkce \M{isMoveValid}. Funkce
 přijímá čtyři argumenty:
 \begin{enumerate}
     \item \M{grid} (pole \M{GridFieldState}): hrací plocha reprezentovaná podle
-        definice v sekci \ref{par:game-grid}
-    \item \M{buttonIndex} (číslo): ID herního políčka, na které chce hráč hrát,
-        podle definice v sekci \ref{par:game-grid}
+        definice v~sekci \ref{par:game-grid}
+    \item \M{buttonIndex} (číslo\footnote{celé číslo, TypeScript má však pouze
+        datový typ \M{number} a narozdíl od jiných jazyků mezi celým a
+        desetinným číslem nerozlišuje}): ID herního políčka, na které chce hráč
+        hrát, podle definice v~sekci \ref{par:game-grid}
     \item \M{player} (text \M{player1}, nebo text \M{player2}): role hráče,
         který tah chce zahrát
-    \item \M{lastPos} (číslo): ID herního políčka, na které se hrálo v
-        předchozím tahu, nebo $-1$ při prvním tahu
+    \item \M{lastPos} (číslo): ID herního políčka, na které se hrálo
+v~předchozím tahu, nebo $-1$ při prvním tahu
 \end{enumerate}
 
 Funkce zkontroluje, zda \M{buttonIndex} náhodou není nevalidní hodnota, zda
-hráč nehraje na políčko, na které se hrálo v předhozím tahu, a zda nehraje na
+hráč nehraje na políčko, na které se hrálo v~předhozím tahu, a zda nehraje na
 políčko, na které už hrál buď pouze on, nebo oba hráči. Pokud se ani jedno
 nestane, tah je validní.
 
@@ -278,9 +292,9 @@ Chceme-li zahrát tah, je potřeba ho zapsat do hrací plochy, to zajišťuje fu
 \M{updateGrid}. Funkce přijímá tři argumenty:
 \begin{enumerate}
     \item \M{grid} (pole \M{GridFieldState}): hrací plocha reprezentovaná podle
-        definice v sekci \ref{par:game-grid}
+        definice v~sekci \ref{par:game-grid}
     \item \M{buttonIndex} (číslo): ID herního políčka, na které chce hráč hrát,
-        podle definice v sekci \ref{par:game-grid}
+        podle definice v~sekci \ref{par:game-grid}
     \item \M{player} (text \M{player1}, nebo text \M{player2}): role hráče,
         který tah chce zahrát
 \end{enumerate}
@@ -306,7 +320,7 @@ const updateGrid = (grid: GridFieldState[], buttonIndex: number, player: 'player
 \end{lstlisting}
 
 \subsection{Zjišťování výhry}
-Po tom, co hráč zahraje tah, je potřeba zjistit, zda nevyhrál hru. K tomu
+Po tom, co hráč zahraje tah, je potřeba zjistit, zda nevyhrál hru. K~tomu
 slouží funkce \M{isGameWon}. Funkce přijímá jeden jediný argument, tedy hrací
 plochu ve stejném formátu jako předchozí dvě funkce.
 
@@ -315,7 +329,7 @@ argumenty (čísla). Interní funkce získá stavy políček určenými svými t
 argumenty a pro každé zkontroluje, zda je stav \M{both}.
 
 Funkce \M{isGameWon} následně zavolá interní funkce \M{allBoth} pro všechny tři
-horizontály, tři vertikály a dvě diagonály. Pokud nastane jedna z výherních
+horizontály, tři vertikály a dvě diagonály. Pokud nastane jedna z~výherních
 pozic, hra je vyhraná.
 
 Funkce neřeší, kdo hru vyhrál.
@@ -353,20 +367,23 @@ const isGameWon = (grid: GridFieldState[]) => {
 };
 \end{lstlisting}
 
-\section{Uživatelské rozhranní}
+\section{Uživatelské rozhranní}\label{sec:user-interface}
 
 Design stránky by po vzoru autora měl působit hravě, neseriózně a zábavně.
 Proto byly při tvorbě uživatelského rozhraní použity výrazné barvy a font Comic
-Sans, který je považován za jeden z nejvíce nevhodně používaných fontů písma
+Sans, který je považován za jeden z~nejvíce nevhodně používaných fontů písma
 \cite{seddon2011}.
 
 Hráči, který vytvořil hru a čeká, než se připojí jeho protihráč, se zobrazuje
-QR kód s odkazem do hry, aby ho mohl druhý hráč naskenovat svým mobilním
+QR kód s~odkazem do hry, aby ho mohl druhý hráč naskenovat svým mobilním
 telefonem, a odkaz do hry, který lze zkopírovat a protihráči ho poslat online.
-Jednoduchá možnost sdílení herního odkazu byl jeden z hlavních požadavků při
-testování s uživateli během vývoje.
+Jednoduchá možnost sdílení herního odkazu byl jeden z~hlavních požadavků při
+testování s~uživateli během vývoje. K vytvoření QR kódu se používá knihovna
+\M{qrcode.react} \cite{react-qr}.
 
-Hrací plocha je v prohlížeči vykreslena vektorově jako SVG pomocí několika
-React komponentů. V kódu je zapsaných devět cest, které ohraničují hrací
+Hrací plocha je v~prohlížeči vykreslena vektorově jako SVG pomocí několika
+React komponentů. V~kódu je zapsaných devět cest, které ohraničují hrací
 políčka. Jednou jsou na vrchu obrázku a se používají pro rozpoznání najetí myši
-na herní políčko
+na herní políčko. Podruhé jsou na spodku obrázku a používají se pro zvýraznění
+herního políčka, na které uživatel najel myší. Po najetí se zvýrazňují pouze
+políčka, na která uživatel může v danou chvíli kliknout.

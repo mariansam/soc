@@ -7,7 +7,7 @@
 \RequirePackage{graphicx}
 \RequirePackage{tabularx}
 \RequirePackage{array}
-\RequirePackage[bookmarksopen,colorlinks,plainpages=false,linkcolor=black,urlcolor=blue,citecolor=black,filecolor=black,menucolor=black,unicode=true,breaklinks]{hyperref}
+\RequirePackage[pdfkeywords={ඞ}, bookmarksopen,colorlinks,plainpages=false,linkcolor=black,urlcolor=blue,citecolor=black,filecolor=black,menucolor=black,unicode=true,breaklinks]{hyperref}
 \RequirePackage{csquotes}
 \RequirePackage[backend=biber,sorting=none,date=long,dateabbrev=false,texencoding=utf8,bibencoding=utf8,style=iso-numeric]{biblatex}
 \RequirePackage{caption}

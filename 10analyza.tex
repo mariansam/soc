@@ -3,30 +3,34 @@
 \section{Pravidla}
 Pravidla hry TickoaTTwo jako první určil americký youtuber Oats Jenkins \cite{jenkins22}.
 
-Stejně jako tradiční piškvorky, hra TickoaTTwo se hraje na hrací ploše o
-velikosti 3x3. Hrací plocha má dle původní definice hry specifický vzhled jako
+Stejně jako tradiční piškvorky, hra TickoaTTwo se hraje na hrací ploše
+o~velikosti 3x3. Hrací plocha má dle původní definice specifický vzhled jako
 na obrázku \ref{fig:empty-board}.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=300px]{img/empty-board.png}
-    \caption{Prázdná herní plocha}
+    \caption[Prázdná herní plocha]{Prázdná herní plocha\footnotemark}
     \label{fig:empty-board}
 \end{figure}
 
-Stejně jako tradiční piškvorky, hru TickoaTTwo proti sobě hrají dva hráči,
-kteří se střídají v tazích. Jeden hráč na políčka v hrací ploše kreslí svislé
-čáry, druhý hráč vodorovné čáry. Na každé políčko může daný hráč hrát pouze
-jednou, avšak lze hrát na políčko, na které už hrál protihráč. Nelze však hrát
-na políčko, na které hrál protihráč v jeho posledním tahu.
+\footnotetext{všechny obrázky v práci jsou vlastní
+práce autora, v případě herních ploch se jedná o snímky obrazovky z webové
+aplikace popsané níže}
+
+TickoaTTwo proti sobě hrají dva hráči, kteří se střídají v~tazích. Jeden hráč
+na políčka v~hrací ploše kreslí svislé čáry, druhý hráč vodorovné čáry. Na
+každé políčko může daný hráč hrát pouze jednou, avšak lze hrát na políčko, na
+které už hrál protihráč. Nelze však hrát na políčko, na které hrál protihráč
+v~jeho posledním tahu.
 
 Není dáno, který hráč začíná.
 
 Cílem každého hráče je dokončit řadu, sloupec či diagonálu, do které už hráli
 oba dva hráči. Hra tedy končí ve stavu, kdy na hrací ploše je alespoň jedna
-řada, sloupec či diagonála, ve které jsou tři \enquote{téčka} (svislá čára od
-jednoho hráče, vodorovná čára od druhého hráče), podle toho i stylizovaný název
-hry se třemi velkými písmeny T.
+řada, sloupec či diagonála, ve které jsou tři \enquote{téčka}/\enquote{pluska}
+(svislá čára od jednoho hráče, vodorovná čára od druhého hráče), podle toho i
+stylizovaný název hry se třemi velkými písmeny~T.
 
 
 % počet her: na každém políčku čtyři, to však děleno 4 protože 4 rotace
@@ -35,13 +39,13 @@ hry se třemi velkými písmeny T.
 
 \section{Optimální strategie}
 Zatímco klasické 3x3 piškvorky vždy končí remízou pokud hrají oba dva hráči optimálně
-\cite{crowley1993}, tak u TickoaTTwo nelze končit remízou. Budou-li oba hráči hrát
+\cite{crowley1993}, tak u~TickoaTTwo nelze končit remízou. Budou-li oba hráči hrát
 optimálně, vyhrává druhý hráč. Základním pravidlem je nevytvořit tři vlastní
-znaky v jedné vertikále/horizontále/diagonále, protože tím bychom dali
+znaky v~jedné vertikále/horizontále/diagonále, protože tím bychom dali
 protihráči možnost je jednoduše doplnit a vyhrát. Nejhorší herní políčko je
-tedy to prostřední, protože se v něm protínají hned čtyři
+tedy to prostřední, protože se v~něm protínají hned čtyři
 vertikály/horizontály/diagonály (na rozdíl od klasických piškvorek, kde
-prostřední políčko je jedno z nejvíce žádaných \cite{xkcd832})
+prostřední políčko je jedno z~nejvíce žádaných \cite{xkcd832})
 
 Optimální strategie pro druhého hráče je co nejdéle hrát naproti prvnímu hráči.
 Jelikož první hráč nechce zabrat tři sousední políčka nebo hrát doprostřed, hra
@@ -55,11 +59,11 @@ volná diagonála a na tahu je první hráč, viz obrázek \ref{fig:empty-diagon
     \label{fig:empty-diagonal}
 \end{figure}
 
-Ať zahraje první hráč kamkoli, druhý hráč bude hrát na další volné políčko v
-diagonále. První hráč následně zabere třetí volné políčko (jedno už zabral on,
-na druhé hrát nemůže, protože ho zabral protihráč v právě předchozím tahu).
+Ať zahraje první hráč kamkoli, druhý hráč bude hrát na další volné políčko
+v~diagonále. První hráč následně zabere třetí volné políčko (jedno už zabral on,
+na druhé hrát nemůže, protože ho zabral protihráč v~právě předchozím tahu).
 Druhému hráč už tak pouze zbývá jedno jediné políčko, na které může hrát, které
-ho dovede k vítězství, viz obrázek \ref{fig:last-diagonal}.
+ho dovede k~vítězství, viz obrázek \ref{fig:last-diagonal}.
 
 \begin{figure}[h]
     \centering
