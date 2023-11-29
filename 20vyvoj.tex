@@ -2,28 +2,45 @@
 
 \section{Použité technologie}
 
-Webová online multiplayer hra je implementovaná pomocí technologií, kterým se souhrnně říká T3 Stack. Podle oficiální dokumentace \parencite{t3stack} úkolem technologií T3 Stack je
+Webová online multiplayer hra je implementovaná pomocí technologií, kterým se
+souhrnně říká T3 Stack. Podle oficiální dokumentace \parencite{t3stack} úkolem
+technologií T3 Stack je
 
 \begin{enumerate}
-    \item \B{Řešit problémy:} Neposkytovat všechny technologie, které jsou dostupné, ale poskytnout technologie, které jsou základem většiny webových aplikací a může být složité je nastavit manuálně.
-    \item \B{\enquote{Krvácet} zodpovědně:} Poskytovat technologie, které jsou moderní a atraktivní, ale tak, aby v budoucnu netvořily problémy a případně se daly nahradit.
-    \item \B{Typová bezpečnost není dobrovolná:} Znalost datových typů pomáhá programátorům s vývojem a bezpečným kódem, proto je v moderním vývoji naprosto nezbytná.
+    \item \B{Řešit problémy:} Neposkytovat všechny technologie, které jsou
+        dostupné, ale poskytnout technologie, které jsou základem většiny
+        webových aplikací a může být složité je nastavit manuálně.
+    \item \B{\enquote{Krvácet} zodpovědně:} Poskytovat technologie, které jsou
+        moderní a atraktivní, ale tak, aby v budoucnu netvořily problémy a
+        případně se daly nahradit.
+    \item \B{Typová bezpečnost není dobrovolná:} Znalost datových typů pomáhá
+        programátorům s vývojem a bezpečným kódem, proto je v moderním vývoji
+        naprosto nezbytná.
 \end{enumerate}
 
 
-Součástí T3 Stack je nástroj \M{create-t3-app}, který umožňuje vytvořit nový projekt, ve kterém jsou dané technologie předem nastavené.
+Součástí T3 Stack je nástroj \M{create-t3-app}, který umožňuje vytvořit nový
+projekt, ve kterém jsou dané technologie předem nastavené.
 
 Seznam technologií použitých:
 \begin{itemize}
-    \item \B{TypeScript:} Nadstavba nad programovacím jazykem JavaScript, která přidává typové anotace a jejich kontrolu. Tím umožňuje rychlejší a bezpečnější vývoj.
-    \item \B{Next.js:} Moderní framework pro vytváření serverových částí webových  aplikací, slouží jako back-end pro React.
-    \item \B{React:} Framework pro vytváření front-endových částí webových aplikací.
-    \item \B{tRPC:} Knihovna pro bezpečnou a otypovanou komunikaci mezi front-endem (React) a back-endem (Next.js).
-    \item \B{Prisma:} Knihovna pro komunikaci mezi back-endem (Next.js) a databází.
+    \item \B{TypeScript:} Nadstavba nad programovacím jazykem JavaScript, která
+        přidává typové anotace a jejich kontrolu. Tím umožňuje rychlejší a
+        bezpečnější vývoj.
+    \item \B{Next.js:} Moderní framework pro vytváření serverových částí
+        webových  aplikací, slouží jako back-end pro React.
+    \item \B{React:} Framework pro vytváření front-endových částí webových
+        aplikací.
+    \item \B{tRPC:} Knihovna pro bezpečnou a otypovanou komunikaci mezi
+        front-endem (React) a back-endem (Next.js).
+    \item \B{Prisma:} Knihovna pro komunikaci mezi back-endem (Next.js) a
+        databází.
     \item \B{TailwindCSS:} Knihovna pro rychlé stylování webových aplikací.
 \end{itemize}
 
-Častou součástí této sady technologií též bývá NextAuth.js, které řeší přihlašování, registraci a správu uživatelů. Jelikož naše aplikace registraci uživatelů neumožňuje, není taková knihovna potřeba.
+Častou součástí této sady technologií též bývá NextAuth.js, které řeší
+přihlašování, registraci a správu uživatelů. Jelikož naše aplikace registraci
+uživatelů neumožňuje, není taková knihovna potřeba.
 
 \section{Databáze}
 
@@ -350,4 +367,6 @@ Jednoduchá možnost sdílení herního odkazu byl jeden z hlavních požadavků
 testování s uživateli během vývoje.
 
 Hrací plocha je v prohlížeči vykreslena vektorově jako SVG pomocí několika
-React komponentů.
+React komponentů. V kódu je zapsaných devět cest, které ohraničují hrací
+políčka. Jednou jsou na vrchu obrázku a se používají pro rozpoznání najetí myši
+na herní políčko
